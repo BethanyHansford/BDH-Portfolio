@@ -82,6 +82,35 @@ input, select, textarea {
 	}
   }
 
+  .typing-animation {
+	animation: typing 3s steps(40), blink-caret 0.75s step-end infinite;
+	white-space: nowrap;
+	overflow: hidden;
+	border-right: 1px solid;
+  }
+  
+  @keyframes typing {
+	0% {
+	  width: 0;
+	}
+	100% {
+	  width: 100%;
+	}
+  }
+  
+  @keyframes blink-caret {
+	from, to {
+	  border-color: transparent;
+	}
+	50% {
+	  border-color: orange;
+	}
+  }
+
+  #visual-identity {
+    color: #B2AC88; /* Replace "red" with the desired color value */
+  }
+  
 .color-change {
   animation: color-change 5s infinite;
 }

@@ -1,8 +1,3 @@
-/*
-	Phantom by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
 
 (function($) {
 
@@ -25,6 +20,115 @@
 				$body.removeClass('is-preload');
 			}, 100);
 		});
+
+		document.addEventListener('DOMContentLoaded', function() {
+			var visualIdentityText = document.getElementById('visual-identity');
+			var texts = ['Visual Identity', 'Branding', 'Packaging', 'Illustration'];
+			var currentIndex = 0;
+		
+			function changeText() {
+			  currentIndex = (currentIndex + 1) % texts.length;
+			  typeText();
+			  setTimeout(eraseText, 3000);
+			}
+		
+			function typeText() {
+			  var text = texts[currentIndex];
+			  var charIndex = 0;
+			  visualIdentityText.textContent = '';
+			  var interval = setInterval(function() {
+				visualIdentityText.textContent += text[charIndex];
+				charIndex++;
+				if (charIndex === text.length) {
+				  clearInterval(interval);
+				  setTimeout(changeText, 3000);
+				}
+			  }, 100);
+			}
+		
+			function eraseText() {
+			  var text = visualIdentityText.textContent;
+			  var charIndex = text.length - 1;
+			  var interval = setInterval(function() {
+				visualIdentityText.textContent = text.substring(0, charIndex);
+				charIndex--;
+				if (charIndex < 0) {
+				  clearInterval(interval);
+				}
+			  }, 50);
+			}
+		
+			changeText();
+		
+			var canvas = document.getElementById('canvas');
+			var context = canvas.getContext('2d');
+			var pencilTrail = [];
+			var trailFadeInterval;
+		
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+		
+			function startTrail(event) {
+			  var pencil = {
+				x: event.clientX,
+				y: event.clientY,
+				opacity: 1
+			  };
+			  pencilTrail.push(pencil);
+			  clearInterval(trailFadeInterval);
+			  trailFadeInterval = setInterval(function() {
+				fadeTrail();
+			  }, 50);
+			  drawTrail();
+			}
+		
+			function moveTrail(event) {
+			  var pencil = {
+				x: event.clientX,
+				y: event.clientY,
+				opacity: 1
+			  };
+			  pencilTrail.push(pencil);
+			  drawTrail();
+			}
+		
+			function endTrail() {
+			  clearInterval(trailFadeInterval);
+			}
+		
+			function fadeTrail() {
+			  context.clearRect(0, 0, canvas.width, canvas.height);
+			  for (var i = 0; i < pencilTrail.length; i++) {
+				pencilTrail[i].opacity -= 0.01;
+				if (pencilTrail[i].opacity <= 0) {
+				  pencilTrail.splice(i, 1);
+				  i--;
+				}
+			  }
+			  drawTrail();
+			}
+		
+			function drawTrail() {
+			  context.clearRect(0, 0, canvas.width, canvas.height);
+			  context.fillStyle = 'black';
+			  context.strokeStyle = 'black';
+			  context.lineWidth = 2;
+		
+			  for (var i = 0; i < pencilTrail.length; i++) {
+				var pencil = pencilTrail[i];
+				context.globalAlpha = pencil.opacity;
+				context.beginPath();
+				context.arc(pencil.x, pencil.y, 5, 0, 2 * Math.PI);
+				context.fill();
+				context.stroke();
+			  }
+			}
+		
+			document.addEventListener('mousedown', startTrail);
+			document.addEventListener('mousemove', moveTrail);
+			document.addEventListener('mouseup', endTrail);
+		  });
+
 
 	// Touch?
 		if (browser.mobile)
