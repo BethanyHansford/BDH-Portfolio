@@ -145,19 +145,18 @@ input, select, textarea {
     color: #B2AC88; /* Replace "red" with the desired color value */
   }
 
-  @keyframes fade-in {
+  .fade-in{
+	animation: fade-in 1s ease;
+}
+
+@keyframes fade-in {
 	from {
-	  opacity: 0;
+		opacity: 0;
 	}
 	to {
-	  opacity: 1;
+		opacity: 1;
 	}
-  }
-  
-  .fade-in {
-	animation: fade-in 1s ease;
-	opacity: 1;
-  }
+}
   
 .color-change {
   animation: color-change 5s infinite;
