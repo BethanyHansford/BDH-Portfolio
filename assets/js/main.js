@@ -25,13 +25,13 @@
 			var visualIdentityText = document.getElementById('visual-identity');
 			var texts = ['Visual Identity', 'Branding', 'Packaging', 'Illustration'];
 			var currentIndex = 0;
-		
+		  
 			function changeText() {
 			  currentIndex = (currentIndex + 1) % texts.length;
 			  typeText();
 			  setTimeout(eraseText, 3000);
 			}
-		
+		  
 			function typeText() {
 			  var text = texts[currentIndex];
 			  var charIndex = 0;
@@ -45,7 +45,7 @@
 				}
 			  }, 100);
 			}
-		
+		  
 			function eraseText() {
 			  var text = visualIdentityText.textContent;
 			  var charIndex = text.length - 1;
@@ -57,79 +57,70 @@
 				}
 			  }, 50);
 			}
-		
+		  
 			changeText();
-		
-			var canvas = document.getElementById('canvas');
-			var context = canvas.getContext('2d');
-			var pencilTrail = [];
-			var trailFadeInterval;
-		
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight;
-		
-			function startTrail(event) {
-			  var pencil = {
-				x: event.clientX,
-				y: event.clientY,
-				opacity: 1
-			  };
-			  pencilTrail.push(pencil);
-			  clearInterval(trailFadeInterval);
-			  trailFadeInterval = setInterval(function() {
-				fadeTrail();
-			  }, 50);
-			  drawTrail();
-			}
-		
-			function moveTrail(event) {
-			  var pencil = {
-				x: event.clientX,
-				y: event.clientY,
-				opacity: 1
-			  };
-			  pencilTrail.push(pencil);
-			  drawTrail();
-			}
-		
-			function endTrail() {
-			  clearInterval(trailFadeInterval);
-			}
-		
-			function fadeTrail() {
-			  context.clearRect(0, 0, canvas.width, canvas.height);
-			  for (var i = 0; i < pencilTrail.length; i++) {
-				pencilTrail[i].opacity -= 0.01;
-				if (pencilTrail[i].opacity <= 0) {
-				  pencilTrail.splice(i, 1);
-				  i--;
-				}
-			  }
-			  drawTrail();
-			}
-		
-			function drawTrail() {
-			  context.clearRect(0, 0, canvas.width, canvas.height);
-			  context.fillStyle = 'black';
-			  context.strokeStyle = 'black';
-			  context.lineWidth = 2;
-		
-			  for (var i = 0; i < pencilTrail.length; i++) {
-				var pencil = pencilTrail[i];
-				context.globalAlpha = pencil.opacity;
-				context.beginPath();
-				context.arc(pencil.x, pencil.y, 5, 0, 2 * Math.PI);
-				context.fill();
-				context.stroke();
-			  }
-			}
-		
-			document.addEventListener('mousedown', startTrail);
-			document.addEventListener('mousemove', moveTrail);
-			document.addEventListener('mouseup', endTrail);
 		  });
 
+// Function to handle slideshow animation
+function startSlideshow() {
+	var slideshowImages = document.querySelectorAll(".slider img");
+	var currentImage = 0;
+	var intervalId;
+  
+	function fadeOut() {
+	  slideshowImages[currentImage].style.opacity = 0;
+	}
+  
+	function fadeIn() {
+	  slideshowImages[currentImage].style.opacity = 1;
+	}
+  
+	function nextImage() {
+	  fadeOut();
+	  currentImage = (currentImage + 1) % slideshowImages.length;
+	  fadeIn();
+	}
+  
+	function startInterval() {
+	  intervalId = setInterval(nextImage, 5000); // Change image every 5 seconds
+	}
+  
+	function stopInterval() {
+	  clearInterval(intervalId);
+	}
+  
+	// Initial setup
+	fadeIn();
+	startInterval();
+  
+	// Slider nav element
+	var sliderNav = document.querySelector(".slider-nav");
+  
+	// Button event listeners
+	var prevButton = document.getElementById("prevButton");
+	var nextButton = document.getElementById("nextButton");
+  
+	prevButton.addEventListener("click", function (event) {
+	  event.preventDefault();
+	  fadeOut();
+	  currentImage = (currentImage - 1 + slideshowImages.length) % slideshowImages.length;
+	  fadeIn();
+	  stopInterval();
+	});
+  
+	nextButton.addEventListener("click", function (event) {
+	  event.preventDefault();
+	  fadeOut();
+	  currentImage = (currentImage + 1) % slideshowImages.length;
+	  fadeIn();
+	  stopInterval();
+	});
+  }
+  
+  // Call the function when the page is loaded
+  window.addEventListener("load", startSlideshow);
 
+		  
 	// Touch?
 		if (browser.mobile)
 			$body.addClass('is-touch');
